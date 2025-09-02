@@ -175,16 +175,16 @@
   </div>
 
   <!-- 腾讯云SDK -->
-  <script src="https://imgcache.qq.com/qcloud/tcbjs/1.17.2/tcb.js"></script>
+  <script src="https://cdn.tencent-cloud.com/tcbjs/1.17.2/tcb.js"></script>
   <script>
-    // 初始化云开发环境（替换为你的ENV_ID）
+    // 初始化云开发环境（已配置您的环境ID）
     const app = tcb.init({
-      env: "cloud1-3g2yfhgrd3944cba" // 例如：disease-survey-abcde
+      env: "cloud1-3g2yfhgrd3944cba"
     });
     const db = app.database();
     const _ = db.command;
 
-    // 疾病数据（完整保留原Google问卷的疾病分类）
+    // 疾病数据（完整分类）
     const diseaseData = {
       "心血管系统疾病（Cardiovascular Diseases）": [
         "心脏瓣膜疾病（Heart valve disorders）",
@@ -618,7 +618,7 @@
       } else {
         try {
           generateFinalSummary();
-          // 构造要提交的数据（与原格式一致）
+          // 构造要提交的数据
           const submitData = [];
           userData.allCauses.forEach(entry => {
             const targetDisease = entry.target.name;
@@ -640,21 +640,21 @@
             });
           });
           // 直接通过Web SDK写入数据库
-          const db = app.database();
           await Promise.all(
             submitData.map(item => 
               db.collection('survey_results').add(item)
             )
           );
+          showMessage('数据提交成功！', 5, 'success');
         } catch (e) {
           console.error("保存失败:", e);
           showMessage("数据保存失败，请重试", 5, "error");
         } finally {
-          goToStep('complete');
+          // 延迟跳转，确保用户看到提示信息
+          setTimeout(() => goToStep('complete'), 1000);
         }
       }
     }
-
 
     // 生成最终总结
     function generateFinalSummary() {
@@ -706,4 +706,4 @@
   </script>
 </body>
 </html>
-
+    
