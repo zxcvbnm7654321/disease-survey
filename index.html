@@ -201,7 +201,7 @@
   <span id="progress-complete">完成</span>
 </div>
   
-  <!-- 步骤0：问卷说明 -->
+<!-- 步骤0：问卷说明 -->
 <div class="step active" id="step0">
   <div class="survey-modules">
     <div class="main-module">
@@ -231,726 +231,664 @@
   <button onclick="goToStep(1)">开始调查</button>
 </div>
 
-  <!-- 步骤1：医师信息收集 -->
-  <div class="step" id="step1">
-    <div class="doctor-info">
-      <h3>医师信息</h3>
-      <p>请填写您的基本信息，以便我们更好地整理和分析调查结果</p>
+<!-- 步骤1：医师信息收集 -->
+<div class="step" id="step1">
+  <div class="doctor-info">
+    <h3>医师信息</h3>
+    <p>请填写您的基本信息，以便我们更好地整理和分析调查结果</p>
+  </div>
+  
+  <div class="question">
+    <div>
+      <label class="form-label" for="doctor-name">姓名：</label>
+      <input type="text" id="doctor-name" placeholder="请输入您的姓名">
     </div>
     
-    <div class="question">
-      <div>
-        <label class="form-label" for="doctor-name">姓名：</label>
-        <input type="text" id="doctor-name" placeholder="请输入您的姓名">
-      </div>
-      
-      <div>
-        <label class="form-label" for="hospital">所属单位：</label>
-        <input type="text" id="hospital" placeholder="请输入您所在的医院/机构">
-      </div>
-      
-      <div>
-        <label class="form-label" for="specialty">擅长专科：</label>
-        <input type="text" id="specialty" placeholder="请输入您擅长的专科领域">
-      </div>
+    <div>
+      <label class="form-label" for="hospital">所属单位：</label>
+      <input type="text" id="hospital" placeholder="请输入您所在的医院/机构">
     </div>
     
-    <button class="secondary" onclick="goToStep(0)">返回说明</button>
-    <button onclick="validateDoctorInfo()">下一步</button>
-    <div class="message" id="message1"></div>
+    <div>
+      <label class="form-label" for="specialty">擅长专科：</label>
+      <input type="text" id="specialty" placeholder="请输入您擅长的专科领域">
+    </div>
   </div>
   
-  <!-- 步骤2：目标疾病选择 -->
-  <div class="step" id="step2">
-    <div class="question">
-      <h3>请选择您擅长的目标疾病（可多选）</h3>
-      
-      <h4>1. 选择目标疾病大类（可多选）</h4>
-      <div id="target-categories"></div>
-      
-      <h4>2. 从选中的大类中选择具体目标疾病（可多选）</h4>
-      <div id="target-diseases" style="margin-top:15px;"></div>
-    </div>
-    <button class="secondary" onclick="goToStep(1)">返回</button>
-    <button onclick="validateTargetSelection()">下一步</button>
-    <div class="message" id="message2"></div>
-  </div>
-  
-  <!-- 步骤3：目标疾病确认 -->
-  <div class="step" id="step3">
-    <div class="question">
-      <h3>您选择的目标疾病如下：</h3>
-      <div id="target-summary" class="target-list"></div>
-      
-      <div style="margin-top:20px;">
-        <h4>接下来的操作：</h4>
-        <p>系统将依次为您选择的每个目标疾病收集可能的病因疾病。</p>
-      </div>
-    </div>
-    <button class="secondary" onclick="goToStep(2)">重新选择</button>
-    <button onclick="startCauseSelection()">开始选择病因</button>
-  </div>
-  
-  <!-- 步骤4：病因选择 -->
-  <div class="step" id="step4">
-    <div class="question">
-      <h3 id="current-target-title">请选择可能导致【目标疾病】的病因疾病</h3>
-      
-      <h4>1. 选择可能的病因疾病大类（可多选）</h4>
-      <div id="current-cause-categories"></div>
-      
-      <h4>2. 从选中的大类中选择具体病因疾病（可多选）</h4>
-      <div id="current-cause-diseases" style="margin-top:15px;"></div>
-    </div>
-    <button class="secondary" onclick="goToPreviousStep()">上一步</button>
-    <button onclick="validateCauseSelection()">下一步</button>
-    <div class="message" id="message4"></div>
-  </div>
-  
-  <!-- 步骤5：信心评估 -->
-  <div class="step" id="step5">
-    <div class="question">
-      <h3>【病因选择结果确认与信心评估】</h3>
-      <p>请为以下每个病因疾病与目标疾病的关联性进行信心评估（1=非常不确定，5=非常确定）：</p>
-      <div id="cause-result-summary" class="cause-result"></div>
-    </div>
-    <button class="secondary" onclick="goToStep(4)">重新选择</button>
-    <button onclick="validateConfidenceAndProceed()">确认并下一步</button>
-    <div class="message" id="message5"></div>
-  </div>
-  
-  <!-- 结束页面 -->
-  <div class="step" id="complete">
-    <div class="final-message">
-      <h2>问卷完成，感谢您的填写！</h2>
-      <p>您已成功完成所有目标疾病的病因关联调查</p>
-    </div>
-    
-    <div class="summary">
-      <h3>调查总览</h3>
-      <div id="final-summary">
-        <div class="empty-state" id="empty-summary">
-          正在加载您的调查结果...
-        </div>
-      </div>
-    </div>
-  </div>
-    
+  <button class="secondary" onclick="goToStep(0)">返回说明</button>
+  <button onclick="validateDoctorInfo()">下一步</button>
+  <div class="message" id="message1"></div>
+</div>
 
-  <!-- 腾讯云SDK -->
-  <script src="https://cdn.tencent-cloud.com/tcbjs/1.17.2/tcb.js"></script>
-  <script>
-    // 初始化腾讯云环境（使用您的实际环境ID）
-    const app = tcb.init({
-      env: "cloud1-3g2yfhgrd3944cba"
-    });
-    const db = app.database();
-    const _ = db.command;
+<!-- 步骤2：目标疾病选择（多选题） -->
+<div class="step" id="step2">
+  <div class="question">
+    <h3>请选择您擅长的目标疾病（可多选）</h3>
+    
+    <h4>1. 选择目标疾病大类（可多选）</h4>
+    <div id="target-categories"></div>
+    
+    <h4>2. 从选中的大类中选择具体目标疾病（可多选）</h4>
+    <div id="target-diseases" style="margin-top:15px;"></div>
+  </div>
+  <button class="secondary" onclick="goToStep(1)">返回</button>
+  <button onclick="validateTargetSelection()">下一步</button>
+  <div class="message" id="message2"></div>
+</div>
 
-    let diseaseData;
-    let userData = {
-      expertId: generateAnonymousId(),
-      currentRound: 1,
-      doctorName: '',
-      hospital: '',
-      specialty: '',
-      targetDiseases: [],
-      currentTargetIndex: 0,
-      allCauses: []
+<!-- 步骤3：目标疾病确认 -->
+<div class="step" id="step3">
+  <div class="question">
+    <h3>您选择的目标疾病如下：</h3>
+    <div id="target-summary" class="target-list"></div>
+    
+    <div style="margin-top:20px;">
+      <h4>接下来的操作：</h4>
+      <p>系统将依次为您选择的每个目标疾病收集可能的病因疾病。</p>
+    </div>
+  </div>
+  <button class="secondary" onclick="goToStep(2)">重新选择</button>
+  <button onclick="startCauseSelection()">开始选择病因</button>
+</div>
+
+<!-- 步骤4：依次显示目标疾病的病因选择 -->
+<div class="step" id="step4">
+  <div class="question">
+    <h3 id="current-target-title">请选择可能导致【目标疾病】的病因疾病</h3>
+    
+    <h4>1. 选择可能的病因疾病大类（可多选）</h4>
+    <div id="current-cause-categories"></div>
+    
+    <h4>2. 从选中的大类中选择具体病因疾病（可多选）</h4>
+    <div id="current-cause-diseases" style="margin-top:15px;"></div>
+  </div>
+  <button class="secondary" onclick="goToPreviousStep()">上一步</button>
+  <button onclick="validateCauseSelection()">下一步</button>
+  <div class="message" id="message4"></div>
+</div>
+
+<!-- 步骤5：病因选择结果确认与信心评估 -->
+<div class="step" id="step5">
+  <div class="question">
+    <h3>【病因选择结果确认与信心评估】</h3>
+    <p>请为以下每个病因疾病与目标疾病的关联性进行信心评估（1=非常不确定，5=非常确定）：</p>
+    <div id="cause-result-summary" class="cause-result"></div>
+  </div>
+  <button class="secondary" onclick="goToStep(4)">重新选择</button>
+  <button onclick="validateConfidenceAndProceed()">确认并下一步</button>
+  <div class="message" id="message5"></div>
+</div>
+
+<!-- 结束页面 -->
+<div class="step" id="complete">
+  <div class="final-message">
+    <h2>问卷完成，感谢您的填写！</h2>
+    <p>您已成功完成所有目标疾病的病因关联调查</p>
+  </div>
+  
+  <div class="summary">
+    <h3>调查总览</h3>
+    <div id="final-summary">
+      <div class="empty-state" id="empty-summary">
+        正在加载您的调查结果...
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  let diseaseData;
+  let userData = {
+    expertId: generateAnonymousId(),
+    currentRound: 1,
+    doctorName: '',
+    hospital: '',
+    specialty: '',
+    targetDiseases: [],
+    currentTargetIndex: 0,
+    allCauses: []
+  };
+  
+  // 生成匿名ID
+  function generateAnonymousId() {
+    return 'exp_' + Math.random().toString(36).substr(2, 9);
+  }
+  
+  // 页面加载初始化（移除外部依赖，直接内置疾病数据）
+  document.addEventListener('DOMContentLoaded', function() {
+    // 直接加载疾病数据（替代Google脚本后端调用）
+    diseaseData = {
+      "心血管系统疾病（Cardiovascular Diseases）": [
+        "心脏瓣膜疾病（Heart valve disorders）",
+        "原发性高血压（Essential hypertension）",
+        "高血压伴并发症和继发性高血压（Hypertension with complications and secondary hypertension）",
+        "冠状动脉粥样硬化和其他心脏病（Coronary atherosclerosis and other heart disease）",
+        "其他和未明确的心脏病（Other and ill-defined heart disease）",
+        "心律失常（Cardiac dysrhythmias）",
+        "充血性心力衰竭；非高血压性（Congestive heart failure; nonhypertensive）",
+        "周围性和内脏动脉粥样硬化（Peripheral and visceral atherosclerosis）",
+        "其他循环系统疾病（Other circulatory disease）"
+      ],
+      "脑血管及神经系统疾病（Cerebrovascular & Neurological Diseases）": [
+        "急性脑血管疾病（Acute cerebrovascular disease）",
+        "其他和定义不清的脑血管疾病（Other and ill-defined cerebrovascular disease）",
+        "短暂性脑缺血（Transient cerebral ischemia）",
+        "脑血管病后遗症（Late effects of cerebrovascular disease）",
+        "其他遗传性和变性神经系统疾病（Other hereditary and degenerative nervous system conditions）",
+        "瘫痪（Paralysis）",
+        "头痛；包括偏头痛（Headache; including migraine）",
+        "神经系统病变（Other nervous system disorders）"
+      ],
+      "呼吸系统疾病（Respiratory Diseases）": [
+        "肺炎（由结核病或性传播疾病引起的肺炎除外）（Pneumonia (except that caused by tuberculosis or sexually transmitted disease)）",
+        "流感（Influenza）",
+        "急性和慢性扁桃体炎（Acute and chronic tonsillitis）",
+        "急性支气管炎（Acute bronchitis）",
+        "其他上呼吸道感染（Other upper respiratory infections）",
+        "慢性阻塞性肺病和支气管扩张（Chronic obstructive pulmonary disease and bronchiectasis）",
+        "哮喘（Asthma）",
+        "胸膜炎；气胸；肺不张（Pleurisy; pneumothorax; pulmonary collapse）",
+        "呼吸衰竭；呼吸功能不全；呼吸暂停（成人）（Respiratory failure; insufficiency; arrest (adult)）",
+        "其他下呼吸道疾病（Other lower respiratory disease）",
+        "其他上呼吸道疾病（Other upper respiratory disease）"
+      ],
+      "消化系统疾病（Gastrointestinal Diseases）": [
+        "肠道感染（Intestinal infection）",
+        "食管异常（Esophageal disorders）",
+        "胃十二指肠溃疡（出血除外）（Gastroduodenal ulcer (except hemorrhage)）",
+        "胃炎和十二指肠炎（Gastritis and duodenitis）",
+        "其他胃和十二指肠疾病（Other disorders of stomach and duodenum）",
+        "阑尾炎及其他阑尾疾病（Appendicitis and other appendiceal conditions）",
+        "腹疝（Abdominal hernia）",
+        "局部肠炎和溃疡性结肠炎（Regional enteritis and ulcerative colitis）",
+        "肠梗阻无疝气（Intestinal obstruction without hernia）",
+        "肛门和直肠疾病（Anal and rectal conditions）",
+        "胆道疾病（Biliary tract disease）",
+        "其他肝脏疾病（Other liver diseases）",
+        "胃肠出血（Gastrointestinal hemorrhage）",
+        "非感染性胃肠炎（Noninfectious gastroenteritis）",
+        "其他胃肠道疾病（Other gastrointestinal disorders）"
+      ],
+      "泌尿生殖系统疾病（Genitourinary Diseases）": [
+        "肾炎；肾病；肾硬化（Nephritis; nephrosis; renal sclerosis）",
+        "急性和未特指的肾衰竭（Acute and unspecified renal failure）",
+        "慢性肾脏疾病（Chronic kidney disease）",
+        "尿路感染（Urinary tract infections）",
+        "尿路结石（Calculus of urinary tract）",
+        "肾脏和输尿管的其他疾病（Other diseases of kidney and ureters）",
+        "其他膀胱和尿道疾病（Other diseases of bladder and urethra）",
+        "泌尿生殖系统症状和未明确情况（Genitourinary symptoms and ill-defined conditions）",
+        "前列腺增生（Hyperplasia of prostate）",
+        "男性生殖器官的炎症状况（Inflammatory conditions of male genital organs）",
+        "其他男性生殖器疾病（Other male genital disorders）",
+        "非恶性乳腺疾病（Nonmalignant breast conditions）",
+        "女性盆腔器官炎症性疾病（Inflammatory diseases of female pelvic organs）",
+        "子宫内膜异位症（Endometriosis）",
+        "月经不调（Menstrual disorders）",
+        "卵巢囊肿（Ovarian cyst）",
+        "更年期疾病（Menopausal disorders）",
+        "女性不孕症（Female infertility）",
+        "其他女性生殖器疾病（Other female genital disorders）"
+      ],
+      "内分泌、代谢及营养疾病（Endocrine, Metabolic & Nutritional Disorders）": [
+        "甲状腺疾病（Thyroid disorders）",
+        "无并发症的糖尿病（Diabetes mellitus without complication）",
+        "伴有并发症的糖尿病（Diabetes mellitus with complications）",
+        "其他内分泌疾病（Other endocrine disorders）",
+        "脂质代谢紊乱（Disorders of lipid metabolism）",
+        "痛风和其他结晶性关节病（Gout and other crystal arthropathies）",
+        "水和电解质紊乱（Fluid and electrolyte disorders）",
+        "其他营养、内分泌和代谢紊乱（Other nutritional; endocrine; and metabolic disorders）",
+        "缺乏和其他贫血（Deficiency and other anemia）"
+      ],
+      "肌肉骨骼系统疾病（Musculoskeletal Disorders）": [
+        "类风湿性关节炎及相关疾病（Rheumatoid arthritis and related disease）",
+        "骨关节炎（Osteoarthritis）",
+        "其他非创伤性关节疾病（Other non-traumatic joint disorders）",
+        "脊柱炎；椎间盘疾病；其他背部问题（Spondylosis; intervertebral disc disorders; other back problems）",
+        "骨质疏松症（Osteoporosis）",
+        "其他获得性畸形（Other acquired deformities）",
+        "其他先天畸形（Other congenital anomalies）",
+        "系统性红斑狼疮和结缔组织疾病（Systemic lupus erythematosus and connective tissue disorders）",
+        "结缔组织疾病（Other connective tissue disease）",
+        "其他骨骼疾病和肌肉骨骼畸形（Other bone disease and musculoskeletal deformities）",
+        "关节疾病和脱位；创伤相关（Joint disorders and dislocations; trauma-related）"
+      ],
+      "感染性疾病（Infectious Diseases）": [
+        "结核病（Tuberculosis）",
+        "败血症（分娩时除外）（Septicemia (except in labor)）",
+        "细菌感染，部位未特指（Bacterial infection; unspecified site）",
+        "真菌疾病（Mycoses）",
+        "肝炎（Hepatitis）",
+        "病毒感染（Viral infection）",
+        "其他感染；包括寄生虫（Other infections; including parasitic）"
+      ],
+      "皮肤及皮下组织疾病（Skin & Subcutaneous Tissue Disorders）": [
+        "皮肤和皮下组织感染（Skin and subcutaneous tissue infections）",
+        "皮肤的其他炎症状况（Other inflammatory condition of skin）",
+        "慢性皮肤溃疡（Chronic ulcer of skin）",
+        "其他皮肤病（Other skin disorders）"
+      ],
+      "精神及行为障碍（Mental & Behavioral Disorders）": [
+        "焦虑症（Anxiety disorders）",
+        "谵妄性痴呆和遗忘及其他认知障碍（Delirium dementia and amnestic and other cognitive disorders）",
+        "情绪障碍（Mood disorders）",
+        "酒精相关障碍（Alcohol-related disorders）",
+        "心理健康和药物滥用法规的筛查和历史记录（Screening and history of mental health and substance abuse codes）",
+        "其他精神健康障碍（Miscellaneous mental health disorders）"
+      ],
+      "眼耳鼻喉疾病（Eye, Ear & ENT Disorders）": [
+        "白内障（Cataract）",
+        "视网膜脱离；缺陷；血管阻塞；视网膜病变（Retinal detachments; defects; vascular occlusion; and retinopathy）",
+        "青光眼（Glaucoma）",
+        "失明和视力缺陷（Blindness and vision defects）",
+        "炎症；眼睛感染（由结核病或性传播疾病引起的除外）（Inflammation; infection of eye (except that caused by tuberculosis or sexually transmitted disease)）",
+        "其他眼部疾病（Other eye disorders）",
+        "中耳炎和相关疾病（Otitis media and related conditions）",
+        "与头晕或眩晕相关的病症（Conditions associated with dizziness or vertigo）",
+        "其他耳朵和感觉器官疾病（Other ear and sense organ disorders）"
+      ],
+      "肿瘤及血液疾病（Neoplasms & Hematological Disorders）": [
+        "性质不明或行为不确定的肿瘤（Neoplasms of unspecified nature or uncertain behavior）",
+        "子宫良性肿瘤（Benign neoplasm of uterus）",
+        "其他和未明确的良性肿瘤（Other and unspecified benign neoplasm）",
+        "缺乏和其他贫血（Deficiency and other anemia）"
+      ],
+      "其他（Miscellaneous）": [
+        "痔（Hemorrhoids）",
+        "牙齿和下颌疾病（Disorders of teeth and jaw）",
+        "口腔疾病；不包括牙科（Diseases of mouth; excluding dental）",
+        "淋巴结炎（Lymphadenitis）",
+        "过敏反应（Allergic reactions）"
+      ]
     };
     
-    // 生成匿名ID
-    function generateAnonymousId() {
-      return 'exp_' + Math.random().toString(36).substr(2, 9);
+    // 初始化疾病选择界面
+    initTargetSelection();
+    initCauseCategories();
+
+    // 超时保险：5分钟未完成则强制结束
+    setTimeout(() => {
+      const activeStep = document.querySelector('.step.active');
+      if (activeStep && activeStep.id !== 'complete') {
+        forceFinish();
+      }
+    }, 300000);
+  });
+  
+  // 验证医师信息（确保点击下一步可跳转）
+  function validateDoctorInfo() {
+    const doctorName = document.getElementById('doctor-name').value.trim();
+    const hospital = document.getElementById('hospital').value.trim();
+    const specialty = document.getElementById('specialty').value.trim();
+    
+    // 信息不完整时显示提示（但不阻止跳转）
+    if (!doctorName || !hospital || !specialty) {
+      showMessage('请尽量填写完整的个人信息以帮助我们更好地整理研究结果', 1, 'error');
     }
     
-    // 页面加载初始化
-    document.addEventListener('DOMContentLoaded', function() {
-      loadDiseaseData()
-        .then(data => {
-          diseaseData = data;
-          initTargetSelection();
-          initCauseCategories();
-        })
-        .catch(error => {
-          showMessage('加载数据失败: ' + error.message, 1, 'error');
-        });
-
-      // 超时保险：5分钟未完成则强制结束
-      setTimeout(() => {
-        const activeStep = document.querySelector('.step.active');
-        if (activeStep && activeStep.id !== 'complete') {
-          forceFinish();
-        }
-      }, 300000);
+    // 保存医师信息
+    userData.doctorName = doctorName;
+    userData.hospital = hospital;
+    userData.specialty = specialty;
+    
+    // 强制跳转到下一步
+    goToStep(2);
+  }
+  
+  // 初始化目标疾病选择
+  function initTargetSelection() {
+    const targetCategoriesDiv = document.getElementById('target-categories');
+    targetCategoriesDiv.innerHTML = '';
+    Object.keys(diseaseData).forEach(category => {
+      targetCategoriesDiv.innerHTML += `
+        <div class="category-item">
+          <input type="checkbox" id="target-category-${category.replace(/\s+/g, '-')}" 
+                 value="${category}" onchange="updateTargetDiseases()">
+          <label for="target-category-${category.replace(/\s+/g, '-')}">${category}</label>
+        </div>
+      `;
+    });
+  }
+  
+  // 更新目标疾病列表
+  function updateTargetDiseases() {
+    const selectedCategories = [];
+    document.querySelectorAll('#target-categories input:checked').forEach(checkbox => {
+      selectedCategories.push(checkbox.value);
+    });
+    const targetDiseasesDiv = document.getElementById('target-diseases');
+    targetDiseasesDiv.innerHTML = selectedCategories.length === 0 
+      ? '<p>请先选择至少一个目标疾病大类</p>' 
+      : '';
+    
+    selectedCategories.forEach(category => {
+      let html = `<div style="margin-bottom:15px;"><strong>${category}</strong>`;
+      diseaseData[category].forEach(disease => {
+        html += `
+          <div class="disease-item">
+            <input type="checkbox" id="target-disease-${disease.replace(/\s+/g, '-')}" 
+                   value="${disease}" data-category="${category}">
+            <label for="target-disease-${disease.replace(/\s+/g, '-')}">${disease}</label>
+          </div>
+        `;
+      });
+      html += '</div>';
+      targetDiseasesDiv.innerHTML += html;
+    });
+  }
+  
+  // 验证目标疾病选择
+  function validateTargetSelection() {
+    const selectedDiseases = [];
+    document.querySelectorAll('#target-diseases input:checked').forEach(checkbox => {
+      selectedDiseases.push({
+        category: checkbox.getAttribute('data-category'),
+        name: checkbox.value
+      });
+    });
+    if (selectedDiseases.length === 0) {
+      showMessage('请至少选择一个具体的目标疾病', 2, 'error');
+      return;
+    }
+    userData.targetDiseases = selectedDiseases;
+    
+    // 生成目标疾病确认内容
+    const targetSummary = document.getElementById('target-summary');
+    targetSummary.innerHTML = selectedDiseases.map((d, i) => 
+      `<p><strong>${i+1}. ${d.name}</strong>（大类：${d.category}）</p>`
+    ).join('');
+    
+    goToStep(3);
+  }
+  
+  // 初始化病因大类
+  function initCauseCategories() {
+    const causeCategoriesDiv = document.getElementById('current-cause-categories');
+    causeCategoriesDiv.innerHTML = '';
+    Object.keys(diseaseData).forEach(category => {
+      causeCategoriesDiv.innerHTML += `
+        <div class="category-item">
+          <input type="checkbox" id="cause-category-${category.replace(/\s+/g, '-')}" 
+                 value="${category}" onchange="updateCurrentCauseDiseases()">
+          <label for="cause-category-${category.replace(/\s+/g, '-')}">${category}</label>
+        </div>
+      `;
+    });
+  }
+  
+  // 更新病因疾病列表
+  function updateCurrentCauseDiseases() {
+    const selectedCategories = [];
+    document.querySelectorAll('#current-cause-categories input:checked').forEach(checkbox => {
+      selectedCategories.push(checkbox.value);
+    });
+    const causeDiseasesDiv = document.getElementById('current-cause-diseases');
+    causeDiseasesDiv.innerHTML = selectedCategories.length === 0 
+      ? '<p>请先选择至少一个病因疾病大类</p>' 
+      : '';
+    
+    selectedCategories.forEach(category => {
+      let html = `<div style="margin-bottom:15px;"><strong>${category}</strong>`;
+      diseaseData[category].forEach(disease => {
+        html += `
+          <div class="disease-item">
+            <input type="checkbox" id="current-cause-disease-${disease.replace(/\s+/g, '-')}" 
+                   value="${disease}" data-category="${category}">
+            <label for="current-cause-disease-${disease.replace(/\s+/g, '-')}">${disease}</label>
+          </div>
+        `;
+      });
+      html += '</div>';
+      causeDiseasesDiv.innerHTML += html;
+    });
+  }
+  
+  // 开始处理病因选择
+  function startCauseSelection() {
+    userData.currentTargetIndex = 0;
+    userData.allCauses = [];
+    loadCurrentTargetCauseSelection();
+    goToStep(4);
+  }
+  
+  // 加载当前目标疾病的病因选择
+  function loadCurrentTargetCauseSelection() {
+    const currentTarget = userData.targetDiseases[userData.currentTargetIndex];
+    document.getElementById('current-target-title').textContent = 
+      `请选择可能导致【${currentTarget.name}】的病因疾病`;
+    
+    // 重置选择框
+    document.querySelectorAll('#current-cause-categories input').forEach(cb => cb.checked = false);
+    document.getElementById('current-cause-diseases').innerHTML = '<p>请先选择至少一个病因疾病大类</p>';
+  }
+  
+  // 验证病因选择并进入信心评估
+  function validateCauseSelection() {
+    const selectedCauseCategories = [];
+    document.querySelectorAll('#current-cause-categories input:checked').forEach(cb => {
+      selectedCauseCategories.push(cb.value);
     });
     
-    // 加载疾病数据（仅使用本地完整数据，不依赖外部数据库）
-    function loadDiseaseData() {
-      return new Promise((resolve) => {
-        const diseaseData = {
-          "心血管系统疾病（Cardiovascular Diseases）": [
-            "心脏瓣膜疾病（Heart valve disorders）",
-            "原发性高血压（Essential hypertension）",
-            "高血压伴并发症和继发性高血压（Hypertension with complications and secondary hypertension）",
-            "冠状动脉粥样硬化和其他心脏病（Coronary atherosclerosis and other heart disease）",
-            "其他和未明确的心脏病（Other and ill-defined heart disease）",
-            "心律失常（Cardiac dysrhythmias）",
-            "充血性心力衰竭；非高血压性（Congestive heart failure; nonhypertensive）",
-            "周围性和内脏动脉粥样硬化（Peripheral and visceral atherosclerosis）",
-            "其他循环系统疾病（Other circulatory disease）"
-          ],
-          "脑血管及神经系统疾病（Cerebrovascular & Neurological Diseases）": [
-            "急性脑血管疾病（Acute cerebrovascular disease）",
-            "其他和定义不清的脑血管疾病（Other and ill-defined cerebrovascular disease）",
-            "短暂性脑缺血（Transient cerebral ischemia）",
-            "脑血管病后遗症（Late effects of cerebrovascular disease）",
-            "其他遗传性和变性神经系统疾病（Other hereditary and degenerative nervous system conditions）",
-            "瘫痪（Paralysis）",
-            "头痛；包括偏头痛（Headache; including migraine）",
-            "神经系统病变（Other nervous system disorders）"
-          ],
-          "呼吸系统疾病（Respiratory Diseases）": [
-            "肺炎（由结核病或性传播疾病引起的肺炎除外）（Pneumonia (except that caused by tuberculosis or sexually transmitted disease)）",
-            "流感（Influenza）",
-            "急性和慢性扁桃体炎（Acute and chronic tonsillitis）",
-            "急性支气管炎（Acute bronchitis）",
-            "其他上呼吸道感染（Other upper respiratory infections）",
-            "慢性阻塞性肺病和支气管扩张（Chronic obstructive pulmonary disease and bronchiectasis）",
-            "哮喘（Asthma）",
-            "胸膜炎；气胸；肺不张（Pleurisy; pneumothorax; pulmonary collapse）",
-            "呼吸衰竭；呼吸功能不全；呼吸暂停（成人）（Respiratory failure; insufficiency; arrest (adult)）",
-            "其他下呼吸道疾病（Other lower respiratory disease）",
-            "其他上呼吸道疾病（Other upper respiratory disease）"
-          ],
-          "消化系统疾病（Gastrointestinal Diseases）": [
-            "肠道感染（Intestinal infection）",
-            "食管异常（Esophageal disorders）",
-            "胃十二指肠溃疡（出血除外）（Gastroduodenal ulcer (except hemorrhage)）",
-            "胃炎和十二指肠炎（Gastritis and duodenitis）",
-            "其他胃和十二指肠疾病（Other disorders of stomach and duodenum）",
-            "阑尾炎及其他阑尾疾病（Appendicitis and other appendiceal conditions）",
-            "腹疝（Abdominal hernia）",
-            "局部肠炎和溃疡性结肠炎（Regional enteritis and ulcerative colitis）",
-            "肠梗阻无疝气（Intestinal obstruction without hernia）",
-            "肛门和直肠疾病（Anal and rectal conditions）",
-            "胆道疾病（Biliary tract disease）",
-            "其他肝脏疾病（Other liver diseases）",
-            "胃肠出血（Gastrointestinal hemorrhage）",
-            "非感染性胃肠炎（Noninfectious gastroenteritis）",
-            "其他胃肠道疾病（Other gastrointestinal disorders）"
-          ],
-          "泌尿生殖系统疾病（Genitourinary Diseases）": [
-            "肾炎；肾病；肾硬化（Nephritis; nephrosis; renal sclerosis）",
-            "急性和未特指的肾衰竭（Acute and unspecified renal failure）",
-            "慢性肾脏疾病（Chronic kidney disease）",
-            "尿路感染（Urinary tract infections）",
-            "尿路结石（Calculus of urinary tract）",
-            "肾脏和输尿管的其他疾病（Other diseases of kidney and ureters）",
-            "其他膀胱和尿道疾病（Other diseases of bladder and urethra）",
-            "泌尿生殖系统症状和未明确情况（Genitourinary symptoms and ill-defined conditions）",
-            "前列腺增生（Hyperplasia of prostate）",
-            "男性生殖器官的炎症状况（Inflammatory conditions of male genital organs）",
-            "其他男性生殖器疾病（Other male genital disorders）",
-            "非恶性乳腺疾病（Nonmalignant breast conditions）",
-            "女性盆腔器官炎症性疾病（Inflammatory diseases of female pelvic organs）",
-            "子宫内膜异位症（Endometriosis）",
-            "月经不调（Menstrual disorders）",
-            "卵巢囊肿（Ovarian cyst）",
-            "更年期疾病（Menopausal disorders）",
-            "女性不孕症（Female infertility）",
-            "其他女性生殖器疾病（Other female genital disorders）"
-          ],
-          "内分泌、代谢及营养疾病（Endocrine, Metabolic & Nutritional Disorders）": [
-            "甲状腺疾病（Thyroid disorders）",
-            "无并发症的糖尿病（Diabetes mellitus without complication）",
-            "伴有并发症的糖尿病（Diabetes mellitus with complications）",
-            "其他内分泌疾病（Other endocrine disorders）",
-            "脂质代谢紊乱（Disorders of lipid metabolism）",
-            "痛风和其他结晶性关节病（Gout and other crystal arthropathies）",
-            "水和电解质紊乱（Fluid and electrolyte disorders）",
-            "其他营养、内分泌和代谢紊乱（Other nutritional; endocrine; and metabolic disorders）",
-            "缺乏和其他贫血（Deficiency and other anemia）"
-          ],
-          "肌肉骨骼系统疾病（Musculoskeletal Disorders）": [
-            "类风湿性关节炎及相关疾病（Rheumatoid arthritis and related disease）",
-            "骨关节炎（Osteoarthritis）",
-            "其他非创伤性关节疾病（Other non-traumatic joint disorders）",
-            "脊柱炎；椎间盘疾病；其他背部问题（Spondylosis; intervertebral disc disorders; other back problems）",
-            "骨质疏松症（Osteoporosis）",
-            "其他获得性畸形（Other acquired deformities）",
-            "其他先天畸形（Other congenital anomalies）",
-            "系统性红斑狼疮和结缔组织疾病（Systemic lupus erythematosus and connective tissue disorders）",
-            "结缔组织疾病（Other connective tissue disease）",
-            "其他骨骼疾病和肌肉骨骼畸形（Other bone disease and musculoskeletal deformities）",
-            "关节疾病和脱位；创伤相关（Joint disorders and dislocations; trauma-related）"
-          ],
-          "感染性疾病（Infectious Diseases）": [
-            "结核病（Tuberculosis）",
-            "败血症（分娩时除外）（Septicemia (except in labor)）",
-            "细菌感染，部位未特指（Bacterial infection; unspecified site）",
-            "真菌疾病（Mycoses）",
-            "肝炎（Hepatitis）",
-            "病毒感染（Viral infection）",
-            "其他感染；包括寄生虫（Other infections; including parasitic）"
-          ],
-          "皮肤及皮下组织疾病（Skin & Subcutaneous Tissue Disorders）": [
-            "皮肤和皮下组织感染（Skin and subcutaneous tissue infections）",
-            "皮肤的其他炎症状况（Other inflammatory condition of skin）",
-            "慢性皮肤溃疡（Chronic ulcer of skin）",
-            "其他皮肤病（Other skin disorders）"
-          ],
-          "精神及行为障碍（Mental & Behavioral Disorders）": [
-            "焦虑症（Anxiety disorders）",
-            "谵妄性痴呆和遗忘及其他认知障碍（Delirium dementia and amnestic and other cognitive disorders）",
-            "情绪障碍（Mood disorders）",
-            "酒精相关障碍（Alcohol-related disorders）",
-            "心理健康和药物滥用法规的筛查和历史记录（Screening and history of mental health and substance abuse codes）",
-            "其他精神健康障碍（Miscellaneous mental health disorders）"
-          ],
-          "眼耳鼻喉疾病（Eye, Ear & ENT Disorders）": [
-            "白内障（Cataract）",
-            "视网膜脱离；缺陷；血管阻塞；视网膜病变（Retinal detachments; defects; vascular occlusion; and retinopathy）",
-            "青光眼（Glaucoma）",
-            "失明和视力缺陷（Blindness and vision defects）",
-            "炎症；眼睛感染（由结核病或性传播疾病引起的除外）（Inflammation; infection of eye (except that caused by tuberculosis or sexually transmitted disease)）",
-            "其他眼部疾病（Other eye disorders）",
-            "中耳炎和相关疾病（Otitis media and related conditions）",
-            "与头晕或眩晕相关的病症（Conditions associated with dizziness or vertigo）",
-            "其他耳朵和感觉器官疾病（Other ear and sense organ disorders）"
-          ],
-          "肿瘤及血液疾病（Neoplasms & Hematological Disorders）": [
-            "性质不明或行为不确定的肿瘤（Neoplasms of unspecified nature or uncertain behavior）",
-            "子宫良性肿瘤（Benign neoplasm of uterus）",
-            "其他和未明确的良性肿瘤（Other and unspecified benign neoplasm）",
-            "缺乏和其他贫血（Deficiency and other anemia）"
-          ],
-          "其他（Miscellaneous）": [
-            "痔（Hemorrhoids）",
-            "牙齿和下颌疾病（Disorders of teeth and jaw）",
-            "口腔疾病；不包括牙科（Diseases of mouth; excluding dental）",
-            "淋巴结炎（Lymphadenitis）",
-            "过敏反应（Allergic reactions）"
-          ]
-        };
-        
-        // 直接返回完整的疾病数据
-        resolve(diseaseData);
+    const selectedCauseDiseases = [];
+    document.querySelectorAll('#current-cause-diseases input:checked').forEach(cb => {
+      selectedCauseDiseases.push({
+        category: cb.getAttribute('data-category'),
+        name: cb.value
       });
+    });
+    
+    if (selectedCauseCategories.length === 0 || selectedCauseDiseases.length === 0) {
+      showMessage('请至少选择一个病因大类和对应的具体疾病', 4, 'error');
+      return;
     }
     
-    // 验证医师信息（已修复：确保无论信息是否完整都能跳转）
-    function validateDoctorInfo() {
-      const doctorName = document.getElementById('doctor-name').value.trim();
-      const hospital = document.getElementById('hospital').value.trim();
-      const specialty = document.getElementById('specialty').value.trim();
-      
-      // 保存医师信息
-      userData.doctorName = doctorName;
-      userData.hospital = hospital;
-      userData.specialty = specialty;
-      
-      // 信息不完整时显示提示（但不阻止跳转）
-      if (!doctorName || !hospital || !specialty) {
-        showMessage('请尽量填写完整的个人信息以帮助我们更好地整理研究结果', 1, 'error');
-      }
-      
-      // 强制跳转到步骤2（目标疾病选择）
-      goToStep(2);
-    }
+    // 保存当前病因数据
+    userData.allCauses.push({
+      target: userData.targetDiseases[userData.currentTargetIndex],
+      diseases: selectedCauseDiseases,
+      confidenceScores: {}
+    });
     
-    // 初始化目标疾病选择
-    function initTargetSelection() {
-      const targetCategoriesDiv = document.getElementById('target-categories');
-      targetCategoriesDiv.innerHTML = '';
-      Object.keys(diseaseData).forEach(category => {
-        targetCategoriesDiv.innerHTML += `
-          <div class="category-item">
-            <input type="checkbox" id="target-category-${category.replace(/\s+/g, '-')}" 
-                   value="${category}" onchange="updateTargetDiseases()">
-            <label for="target-category-${category.replace(/\s+/g, '-')}">${category}</label>
-          </div>
+    // 生成带信心评估的确认内容
+    generateCauseConfirmation();
+    goToStep(5);
+  }
+  
+  // 生成带信心评估的病因确认页内容
+  function generateCauseConfirmation() {
+    const resultSummary = document.getElementById('cause-result-summary');
+    const currentEntry = userData.allCauses[userData.allCauses.length - 1];
+    const currentTarget = currentEntry.target;
+    
+    let html = `<p><strong>目标疾病：${currentTarget.name}</strong>（${currentTarget.category}）</p>`;
+    
+    // 按大类分组生成列表
+    const categoryGroups = {};
+    currentEntry.diseases.forEach(d => {
+      if (!categoryGroups[d.category]) categoryGroups[d.category] = [];
+      categoryGroups[d.category].push(d.name);
+    });
+    
+    Object.keys(categoryGroups).forEach(cat => {
+      html += `<div class="category-group"><strong>${cat}：</strong><ul>`;
+      categoryGroups[cat].forEach(disease => {
+        const diseaseId = disease.replace(/\s+/g, '-');
+        html += `
+          <li>
+            ${disease}
+            <div class="confidence-rating">
+              <label>信心评分：</label>
+              <input type="radio" name="confidence-${diseaseId}" value="1" required>1
+              <input type="radio" name="confidence-${diseaseId}" value="2">2
+              <input type="radio" name="confidence-${diseaseId}" value="3">3
+              <input type="radio" name="confidence-${diseaseId}" value="4">4
+              <input type="radio" name="confidence-${diseaseId}" value="5">5
+            </div>
+          </li>
         `;
       });
-    }
+      html += '</ul></div>';
+    });
     
-    // 更新目标疾病列表
-    function updateTargetDiseases() {
-      const selectedCategories = [];
-      document.querySelectorAll('#target-categories input:checked').forEach(checkbox => {
-        selectedCategories.push(checkbox.value);
-      });
-      const targetDiseasesDiv = document.getElementById('target-diseases');
-      targetDiseasesDiv.innerHTML = selectedCategories.length === 0 
-        ? '<p>请先选择至少一个目标疾病大类</p>' 
-        : '';
-      
-      selectedCategories.forEach(category => {
-        let html = `<div style="margin-bottom:15px;"><strong>${category}</strong>`;
-        diseaseData[category].forEach(disease => {
-          html += `
-            <div class="disease-item">
-              <input type="checkbox" id="target-disease-${disease.replace(/\s+/g, '-')}" 
-                     value="${disease}" data-category="${category}">
-              <label for="target-disease-${disease.replace(/\s+/g, '-')}">${disease}</label>
-            </div>
-          `;
-        });
-        html += '</div>';
-        targetDiseasesDiv.innerHTML += html;
-      });
-    }
+    resultSummary.innerHTML = html;
+  }
+  
+  // 验证信心评分并进入下一步
+  function validateConfidenceAndProceed() {
+    // 检查是否所有病因都已评分
+    const unratedCauses = [];
+    const currentEntry = userData.allCauses[userData.allCauses.length - 1];
     
-    // 验证目标疾病选择
-    function validateTargetSelection() {
-      const selectedDiseases = [];
-      document.querySelectorAll('#target-diseases input:checked').forEach(checkbox => {
-        selectedDiseases.push({
-          category: checkbox.getAttribute('data-category'),
-          name: checkbox.value
-        });
-      });
-      if (selectedDiseases.length === 0) {
-        showMessage('请至少选择一个具体的目标疾病', 2, 'error');
-        return;
+    currentEntry.diseases.forEach(disease => {
+      const diseaseId = disease.name.replace(/\s+/g, '-');
+      const isRated = document.querySelector(`input[name="confidence-${diseaseId}"]:checked`) !== null;
+      if (!isRated) {
+        unratedCauses.push(disease.name);
       }
-      userData.targetDiseases = selectedDiseases;
-      
-      // 生成目标疾病确认内容
-      const targetSummary = document.getElementById('target-summary');
-      targetSummary.innerHTML = selectedDiseases.map((d, i) => 
-        `<p><strong>${i+1}. ${d.name}</strong>（大类：${d.category}）</p>`
-      ).join('');
-      
-      goToStep(3);
+    });
+    
+    if (unratedCauses.length > 0) {
+      showMessage(`请为以下病因完成信心评估：${unratedCauses.join('、')}`, 5, 'error');
+      return;
     }
     
-    // 初始化病因大类
-    function initCauseCategories() {
-      const causeCategoriesDiv = document.getElementById('current-cause-categories');
-      causeCategoriesDiv.innerHTML = '';
-      Object.keys(diseaseData).forEach(category => {
-        causeCategoriesDiv.innerHTML += `
-          <div class="category-item">
-            <input type="checkbox" id="cause-category-${category.replace(/\s+/g, '-')}" 
-                   value="${category}" onchange="updateCurrentCauseDiseases()">
-            <label for="cause-category-${category.replace(/\s+/g, '-')}">${category}</label>
-          </div>
-        `;
-      });
-    }
+    // 保存每个病因的信心评分
+    currentEntry.diseases.forEach(disease => {
+      const diseaseId = disease.name.replace(/\s+/g, '-');
+      const rating = document.querySelector(`input[name="confidence-${diseaseId}"]:checked`).value;
+      currentEntry.confidenceScores[disease.name] = parseInt(rating);
+    });
     
-    // 更新病因疾病列表
-    function updateCurrentCauseDiseases() {
-      const selectedCategories = [];
-      document.querySelectorAll('#current-cause-categories input:checked').forEach(checkbox => {
-        selectedCategories.push(checkbox.value);
-      });
-      const causeDiseasesDiv = document.getElementById('current-cause-diseases');
-      causeDiseasesDiv.innerHTML = selectedCategories.length === 0 
-        ? '<p>请先选择至少一个病因疾病大类</p>' 
-        : '';
-      
-      selectedCategories.forEach(category => {
-        let html = `<div style="margin-bottom:15px;"><strong>${category}</strong>`;
-        diseaseData[category].forEach(disease => {
-          html += `
-            <div class="disease-item">
-              <input type="checkbox" id="current-cause-disease-${disease.replace(/\s+/g, '-')}" 
-                     value="${disease}" data-category="${category}">
-              <label for="current-cause-disease-${disease.replace(/\s+/g, '-')}">${disease}</label>
-            </div>
-          `;
-        });
-        html += '</div>';
-        causeDiseasesDiv.innerHTML += html;
-      });
-    }
-    
-    // 开始处理病因选择
-    function startCauseSelection() {
-      userData.currentTargetIndex = 0;
-      userData.allCauses = [];
+    // 继续流程
+    processNextTarget();
+  }
+  
+  // 处理下一个目标疾病
+  function processNextTarget() {
+    userData.currentTargetIndex++;
+    if (userData.currentTargetIndex < userData.targetDiseases.length) {
       loadCurrentTargetCauseSelection();
       goToStep(4);
-    }
-    
-    // 加载当前目标疾病的病因选择
-    function loadCurrentTargetCauseSelection() {
-      const currentTarget = userData.targetDiseases[userData.currentTargetIndex];
-      document.getElementById('current-target-title').textContent = 
-        `请选择可能导致【${currentTarget.name}】的病因疾病`;
-      
-      // 重置选择框
-      document.querySelectorAll('#current-cause-categories input').forEach(cb => cb.checked = false);
-      document.getElementById('current-cause-diseases').innerHTML = '<p>请先选择至少一个病因疾病大类</p>';
-    }
-    
-    // 验证病因选择
-    function validateCauseSelection() {
-      const selectedCauseCategories = [];
-      document.querySelectorAll('#current-cause-categories input:checked').forEach(cb => {
-        selectedCauseCategories.push(cb.value);
-      });
-      
-      const selectedCauseDiseases = [];
-      document.querySelectorAll('#current-cause-diseases input:checked').forEach(cb => {
-        selectedCauseDiseases.push({
-          category: cb.getAttribute('data-category'),
-          name: cb.value
-        });
-      });
-      
-      if (selectedCauseCategories.length === 0 || selectedCauseDiseases.length === 0) {
-        showMessage('请至少选择一个病因大类和对应的具体疾病', 4, 'error');
-        return;
+    } else {
+      // 完成所有目标疾病的评估
+      try {
+        generateFinalSummary();
+      } catch (e) {
+        console.error('生成总结失败:', e);
+      } finally {
+        goToStep('complete');
       }
-      
-      // 保存当前病因数据
-      userData.allCauses.push({
-        target: userData.targetDiseases[userData.currentTargetIndex],
-        diseases: selectedCauseDiseases,
-        confidenceScores: {}
-      });
-      
-      // 生成带信心评估的确认内容
-      generateCauseConfirmation();
-      goToStep(5);
+    }
+  }
+  
+  // 生成最终总结
+  function generateFinalSummary() {
+    const finalSummary = document.getElementById('final-summary');
+    finalSummary.innerHTML = '';
+    
+    if (!userData.allCauses || userData.allCauses.length === 0) {
+      finalSummary.innerHTML = '<div class="empty-state">没有找到调查结果</div>';
+      return;
     }
     
-    // 生成信心评估内容
-    function generateCauseConfirmation() {
-      const resultSummary = document.getElementById('cause-result-summary');
-      const currentEntry = userData.allCauses[userData.allCauses.length - 1];
-      const currentTarget = currentEntry.target;
-      
-      let html = `<p><strong>目标疾病：${currentTarget.name}</strong>（${currentTarget.category}）</p>`;
+    userData.allCauses.forEach((item, index) => {
+      let html = `
+        <div style="margin-bottom:20px;">
+          <p><strong>${index + 1}. 目标疾病：${item.target.name}</strong>（${item.target.category}）</p>
+          <p><strong>相关病因疾病及信心评分：</strong></p>
+        `;
       
       // 按大类分组
       const categoryGroups = {};
-      currentEntry.diseases.forEach(d => {
+      item.diseases.forEach(d => {
         if (!categoryGroups[d.category]) categoryGroups[d.category] = [];
         categoryGroups[d.category].push(d.name);
       });
       
       Object.keys(categoryGroups).forEach(cat => {
         html += `<div class="category-group"><strong>${cat}：</strong><ul>`;
-        categoryGroups[cat].forEach(disease => {
-          const diseaseId = disease.replace(/\s+/g, '-');
-          html += `
-            <li>
-              ${disease}
-              <div class="confidence-rating">
-                <label>信心评分：</label>
-                <input type="radio" name="confidence-${diseaseId}" value="1" required>1
-                <input type="radio" name="confidence-${diseaseId}" value="2">2
-                <input type="radio" name="confidence-${diseaseId}" value="3">3
-                <input type="radio" name="confidence-${diseaseId}" value="4">4
-                <input type="radio" name="confidence-${diseaseId}" value="5">5
-              </div>
-            </li>
-          `;
+        categoryGroups[cat].forEach(d => {
+          html += `<li>${d} - 信心评分：${item.confidenceScores[d]}/5</li>`;
         });
         html += '</ul></div>';
       });
       
-      resultSummary.innerHTML = html;
-    }
-    
-    // 验证信心评分（已修复：确保验证后能继续流程）
-    function validateConfidenceAndProceed() {
-      // 检查是否所有病因都已评分
-      const unratedCauses = [];
-      const currentEntry = userData.allCauses[userData.allCauses.length - 1];
-      
-      currentEntry.diseases.forEach(disease => {
-        const diseaseId = disease.name.replace(/\s+/g, '-');
-        const isRated = document.querySelector(`input[name="confidence-${diseaseId}"]:checked`) !== null;
-        if (!isRated) {
-          unratedCauses.push(disease.name);
-        }
-      });
-      
-      if (unratedCauses.length > 0) {
-        showMessage(`请为以下病因完成信心评估：${unratedCauses.join('、')}`, 5, 'error');
-        return;
-      }
-      
-      // 保存每个病因的信心评分
-      currentEntry.diseases.forEach(disease => {
-        const diseaseId = disease.name.replace(/\s+/g, '-');
-        const rating = document.querySelector(`input[name="confidence-${diseaseId}"]:checked`).value;
-        currentEntry.confidenceScores[disease.name] = parseInt(rating);
-      });
-      
-      // 处理下一个目标疾病或完成问卷
-      processNextTarget();
-    }
-    
-    // 处理下一个目标疾病
-    function processNextTarget() {
-      userData.currentTargetIndex++;
-      if (userData.currentTargetIndex < userData.targetDiseases.length) {
-        loadCurrentTargetCauseSelection();
-        goToStep(4);
-      } else {
-        // 完成所有目标疾病的评估
-        try {
-          generateFinalSummary();
-        } catch (e) {
-          console.error('生成总结失败:', e);
-        } finally {
-          // 保存结果到腾讯云数据库
-          saveResultsToTencentCloud(userData)
-            .then(() => console.log('数据保存成功'))
-            .catch(e => console.error('保存失败:', e));
-            
-          goToStep('complete');
-        }
-      }
-    }
-    
-    // 保存结果到腾讯云数据库
-    function saveResultsToTencentCloud(data) {
-      return new Promise((resolve, reject) => {
-        // 构造要保存的数据格式
-        const submitData = [];
-        data.allCauses.forEach(entry => {
-          entry.diseases.forEach(disease => {
-            submitData.push({
-              expertId: data.expertId,
-              doctorName: data.doctorName,
-              hospital: data.hospital,
-              specialty: data.specialty,
-              round: data.currentRound,
-              targetDisease: entry.target.name,
-              targetCategory: entry.target.category,
-              causeDisease: disease.name,
-              causeCategory: disease.category,
-              confidence: entry.confidenceScores[disease.name],
-              timestamp: new Date().toISOString()
-            });
-          });
-        });
-        
-        if (submitData.length > 0) {
-          // 批量添加数据
-          db.collection('disease_relations')
-            .add(submitData)
-            .then(res => resolve(res))
-            .catch(err => reject(err));
-        } else {
-          resolve();
-        }
-      });
-    }
-    
-    // 生成最终总结
-    function generateFinalSummary() {
-      const finalSummary = document.getElementById('final-summary');
-      finalSummary.innerHTML = '';
-      
-      if (!userData.allCauses || userData.allCauses.length === 0) {
-        finalSummary.innerHTML = '<div class="empty-state">没有找到调查结果</div>';
-        return;
-      }
-      
-      userData.allCauses.forEach((item, index) => {
-        let html = `
-          <div style="margin-bottom:20px;">
-            <p><strong>${index + 1}. 目标疾病：${item.target.name}</strong>（${item.target.category}）</p>
-            <p><strong>相关病因疾病及信心评分：</strong></p>
-          `;
-        
-        // 按大类分组
-        const categoryGroups = {};
-        item.diseases.forEach(d => {
-          if (!categoryGroups[d.category]) categoryGroups[d.category] = [];
-          categoryGroups[d.category].push(d.name);
-        });
-        
-        Object.keys(categoryGroups).forEach(cat => {
-          html += `<div class="category-group"><strong>${cat}：</strong><ul>`;
-          categoryGroups[cat].forEach(d => {
-            html += `<li>${d} - 信心评分：${item.confidenceScores[d]}/5</li>`;
-          });
-          html += '</ul></div>';
-        });
-        
-        html += '</div>';
-        finalSummary.innerHTML += html;
-      });
-    }
-    
-    // 步骤切换函数（已修复：支持complete页面切换）
-    function goToStep(stepNumber) {
-      try {
-        document.querySelectorAll('.step').forEach(step => {
-          step.classList.remove('active');
-        });
-        
-        // 单独处理完成页
-        let targetStep;
-        if (stepNumber === 'complete') {
-          targetStep = document.getElementById('complete');
-        } else {
-          targetStep = document.getElementById('step' + stepNumber);
-        }
-        
-        if (targetStep) {
-          targetStep.classList.add('active');
-        } else {
-          forceFinish();
-        }
-        
-        // 更新进度条
-        document.querySelectorAll('.progress span').forEach(span => {
-          span.classList.remove('active');
-        });
-        if (stepNumber === 'complete') {
-          document.getElementById('progress-complete').classList.add('active');
-        } else {
-          for (let i = 0; i <= stepNumber; i++) {
-            const el = document.getElementById('progress-step' + i);
-            if (el) el.classList.add('active');
-          }
-        }
-      } catch (error) {
-        console.error('步骤切换失败:', error);
-        forceFinish();
-      }
-    }
-    
-    // 强制结束函数
-    function forceFinish() {
+      html += '</div>';
+      finalSummary.innerHTML += html;
+    });
+  }
+  
+  // 步骤切换函数（修复完成页切换逻辑）
+  function goToStep(stepNumber) {
+    try {
       document.querySelectorAll('.step').forEach(step => {
         step.classList.remove('active');
       });
-      document.getElementById('complete').classList.add('active');
+      
+      // 处理完成页
+      let targetStep;
+      if (stepNumber === 'complete') {
+        targetStep = document.getElementById('complete');
+      } else {
+        targetStep = document.getElementById('step' + stepNumber);
+      }
+      
+      if (targetStep) {
+        targetStep.classList.add('active');
+      } else {
+        forceFinish();
+      }
+      
+      // 更新进度条
       document.querySelectorAll('.progress span').forEach(span => {
         span.classList.remove('active');
       });
-      document.getElementById('progress-complete').classList.add('active');
-    }
-    
-    // 上一步按钮逻辑（已修复：正确返回步骤）
-    function goToPreviousStep() {
-      if (userData.currentTargetIndex === 0) {
-        goToStep(3); // 第一个目标疾病：返回步骤3（目标疾病确认）
+      if (stepNumber === 'complete') {
+        document.getElementById('progress-complete').classList.add('active');
       } else {
-        goToStep(4); // 非第一个目标疾病：返回步骤4（当前病因选择页）
+        for (let i = 0; i <= stepNumber; i++) {
+          const el = document.getElementById('progress-step' + i);
+          if (el) el.classList.add('active');
+        }
       }
+    } catch (error) {
+      console.error('步骤切换失败:', error);
+      forceFinish();
     }
-    
-    function showMessage(text, step, type) {
-      const el = document.getElementById('message' + step);
-      if (el) {
-        el.textContent = text;
-        el.className = 'message ' + type;
-        el.style.display = 'block';
-        setTimeout(() => el.style.display = 'none', 5000);
-      }
+  }
+  
+  // 强制结束函数
+  function forceFinish() {
+    document.querySelectorAll('.step').forEach(step => {
+      step.classList.remove('active');
+    });
+    document.getElementById('complete').classList.add('active');
+    document.querySelectorAll('.progress span').forEach(span => {
+      span.classList.remove('active');
+    });
+    document.getElementById('progress-complete').classList.add('active');
+  }
+  
+  // 上一步按钮逻辑
+  function goToPreviousStep() {
+    if (userData.currentTargetIndex === 0) {
+      goToStep(3);
+    } else {
+      goToStep(5);
     }
-  </script>
+  }
+  
+  function showMessage(text, step, type) {
+    const el = document.getElementById('message' + step);
+    if (el) {
+      el.textContent = text;
+      el.className = 'message ' + type;
+      el.style.display = 'block';
+      setTimeout(() => el.style.display = 'none', 5000);
+    }
+  }
+</script>
 </body>
 </html>
