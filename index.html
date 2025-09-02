@@ -616,37 +616,36 @@
         loadCurrentTargetCauseSelection();
         goToStep(4);
       } else {
-        // 保存所有数据到腾讯云数据库
         try {
           generateFinalSummary();
-          // 构造与原Google Sheets相同的字段结构
-          const batchOps = [];
+          // 构造要提交的数据（与原格式一致）
+          const submitData = [];
           userData.allCauses.forEach(entry => {
             const targetDisease = entry.target.name;
             const targetCategory = entry.target.category;
             entry.diseases.forEach(disease => {
-              batchOps.push({
-                command: "add",
-                args: {
-                  data: {
-                    timestamp: db.serverDate(), // 服务器时间
-                    expertId: userData.expertId,
-                    currentRound: userData.currentRound,
-                    doctorName: userData.doctorName,
-                    hospital: userData.hospital,
-                    specialty: userData.specialty,
-                    targetDisease: targetDisease,
-                    targetCategory: targetCategory,
-                    causeDisease: disease.name,
-                    causeCategory: disease.category,
-                    confidence: entry.confidenceScores[disease.name]
-                  }
-                }
+              submitData.push({
+                timestamp: db.serverDate(), // 腾讯云服务器时间
+                expertId: userData.expertId,
+                currentRound: userData.currentRound,
+                doctorName: userData.doctorName,
+                hospital: userData.hospital,
+                specialty: userData.specialty,
+                targetDisease: targetDisease,
+                targetCategory: targetCategory,
+                causeDisease: disease.name,
+                causeCategory: disease.category,
+                confidence: entry.confidenceScores[disease.name]
               });
             });
           });
-          // 批量插入数据
-          await db.collection("survey_results").bulkWrite(batchOps);
+          // 直接通过Web SDK写入数据库
+          const db = app.database();
+          await Promise.all(
+            submitData.map(item => 
+              db.collection('survey_results').add(item)
+            )
+          );
         } catch (e) {
           console.error("保存失败:", e);
           showMessage("数据保存失败，请重试", 5, "error");
@@ -655,6 +654,7 @@
         }
       }
     }
+
 
     // 生成最终总结
     function generateFinalSummary() {
@@ -706,3 +706,4 @@
   </script>
 </body>
 </html>
+
