@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>第一轮疾病病因关联调查</title>
   <style>
     body {
@@ -56,8 +57,30 @@
       padding: 6px 8px;
       border: 1px solid #ddd;
       border-radius: 4px;
-      width: 300px;
+      width: calc(100% - 150px);
+      min-width: 250px;
       margin-bottom: 10px;
+      /* 修复移动端输入问题 */
+      -webkit-appearance: none;
+      appearance: none;
+      font-size: 16px; /* 避免iOS自动缩放 */
+    }
+    /* 移动端适配 */
+    @media (max-width: 600px) {
+      input[type="text"] {
+        width: 100%;
+        min-width: auto;
+        margin-left: 0;
+      }
+      label.form-label {
+        display: block;
+        width: 100%;
+        text-align: left;
+        margin-bottom: 5px;
+      }
+      .question {
+        padding: 10px;
+      }
     }
     label.form-label {
       display: inline-block;
@@ -74,6 +97,7 @@
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      font-size: 16px;
     }
     button:hover {
       background-color: #45a049;
@@ -241,22 +265,22 @@
   <div class="question">
     <div>
       <label class="form-label" for="doctor-name">姓名：</label>
-      <input type="text" id="doctor-name" placeholder="请输入您的姓名">
+      <input type="text" id="doctor-name" placeholder="请输入您的姓名" tabindex="1">
     </div>
     
     <div>
       <label class="form-label" for="hospital">所属单位：</label>
-      <input type="text" id="hospital" placeholder="请输入您所在的医院/机构">
+      <input type="text" id="hospital" placeholder="请输入您所在的医院/机构" tabindex="2">
     </div>
     
     <div>
       <label class="form-label" for="specialty">擅长专科：</label>
-      <input type="text" id="specialty" placeholder="请输入您擅长的专科领域">
+      <input type="text" id="specialty" placeholder="请输入您擅长的专科领域" tabindex="3">
     </div>
   </div>
   
-  <button class="secondary" onclick="goToStep(0)">返回说明</button>
-  <button onclick="validateDoctorInfo()">下一步</button>
+  <button class="secondary" onclick="goToStep(0)" tabindex="5">返回说明</button>
+  <button onclick="validateDoctorInfo()" id="step1-next" tabindex="4">下一步</button>
   <div class="message" id="message1"></div>
 </div>
 
@@ -355,9 +379,9 @@
     return 'exp_' + Math.random().toString(36).substr(2, 9);
   }
   
-  // 页面加载初始化（移除外部依赖，直接内置疾病数据）
+  // 页面加载初始化
   document.addEventListener('DOMContentLoaded', function() {
-    // 直接加载疾病数据（替代Google脚本后端调用）
+    // 初始化疾病数据
     diseaseData = {
       "心血管系统疾病（Cardiovascular Diseases）": [
         "心脏瓣膜疾病（Heart valve disorders）",
@@ -392,115 +416,6 @@
         "呼吸衰竭；呼吸功能不全；呼吸暂停（成人）（Respiratory failure; insufficiency; arrest (adult)）",
         "其他下呼吸道疾病（Other lower respiratory disease）",
         "其他上呼吸道疾病（Other upper respiratory disease）"
-      ],
-      "消化系统疾病（Gastrointestinal Diseases）": [
-        "肠道感染（Intestinal infection）",
-        "食管异常（Esophageal disorders）",
-        "胃十二指肠溃疡（出血除外）（Gastroduodenal ulcer (except hemorrhage)）",
-        "胃炎和十二指肠炎（Gastritis and duodenitis）",
-        "其他胃和十二指肠疾病（Other disorders of stomach and duodenum）",
-        "阑尾炎及其他阑尾疾病（Appendicitis and other appendiceal conditions）",
-        "腹疝（Abdominal hernia）",
-        "局部肠炎和溃疡性结肠炎（Regional enteritis and ulcerative colitis）",
-        "肠梗阻无疝气（Intestinal obstruction without hernia）",
-        "肛门和直肠疾病（Anal and rectal conditions）",
-        "胆道疾病（Biliary tract disease）",
-        "其他肝脏疾病（Other liver diseases）",
-        "胃肠出血（Gastrointestinal hemorrhage）",
-        "非感染性胃肠炎（Noninfectious gastroenteritis）",
-        "其他胃肠道疾病（Other gastrointestinal disorders）"
-      ],
-      "泌尿生殖系统疾病（Genitourinary Diseases）": [
-        "肾炎；肾病；肾硬化（Nephritis; nephrosis; renal sclerosis）",
-        "急性和未特指的肾衰竭（Acute and unspecified renal failure）",
-        "慢性肾脏疾病（Chronic kidney disease）",
-        "尿路感染（Urinary tract infections）",
-        "尿路结石（Calculus of urinary tract）",
-        "肾脏和输尿管的其他疾病（Other diseases of kidney and ureters）",
-        "其他膀胱和尿道疾病（Other diseases of bladder and urethra）",
-        "泌尿生殖系统症状和未明确情况（Genitourinary symptoms and ill-defined conditions）",
-        "前列腺增生（Hyperplasia of prostate）",
-        "男性生殖器官的炎症状况（Inflammatory conditions of male genital organs）",
-        "其他男性生殖器疾病（Other male genital disorders）",
-        "非恶性乳腺疾病（Nonmalignant breast conditions）",
-        "女性盆腔器官炎症性疾病（Inflammatory diseases of female pelvic organs）",
-        "子宫内膜异位症（Endometriosis）",
-        "月经不调（Menstrual disorders）",
-        "卵巢囊肿（Ovarian cyst）",
-        "更年期疾病（Menopausal disorders）",
-        "女性不孕症（Female infertility）",
-        "其他女性生殖器疾病（Other female genital disorders）"
-      ],
-      "内分泌、代谢及营养疾病（Endocrine, Metabolic & Nutritional Disorders）": [
-        "甲状腺疾病（Thyroid disorders）",
-        "无并发症的糖尿病（Diabetes mellitus without complication）",
-        "伴有并发症的糖尿病（Diabetes mellitus with complications）",
-        "其他内分泌疾病（Other endocrine disorders）",
-        "脂质代谢紊乱（Disorders of lipid metabolism）",
-        "痛风和其他结晶性关节病（Gout and other crystal arthropathies）",
-        "水和电解质紊乱（Fluid and electrolyte disorders）",
-        "其他营养、内分泌和代谢紊乱（Other nutritional; endocrine; and metabolic disorders）",
-        "缺乏和其他贫血（Deficiency and other anemia）"
-      ],
-      "肌肉骨骼系统疾病（Musculoskeletal Disorders）": [
-        "类风湿性关节炎及相关疾病（Rheumatoid arthritis and related disease）",
-        "骨关节炎（Osteoarthritis）",
-        "其他非创伤性关节疾病（Other non-traumatic joint disorders）",
-        "脊柱炎；椎间盘疾病；其他背部问题（Spondylosis; intervertebral disc disorders; other back problems）",
-        "骨质疏松症（Osteoporosis）",
-        "其他获得性畸形（Other acquired deformities）",
-        "其他先天畸形（Other congenital anomalies）",
-        "系统性红斑狼疮和结缔组织疾病（Systemic lupus erythematosus and connective tissue disorders）",
-        "结缔组织疾病（Other connective tissue disease）",
-        "其他骨骼疾病和肌肉骨骼畸形（Other bone disease and musculoskeletal deformities）",
-        "关节疾病和脱位；创伤相关（Joint disorders and dislocations; trauma-related）"
-      ],
-      "感染性疾病（Infectious Diseases）": [
-        "结核病（Tuberculosis）",
-        "败血症（分娩时除外）（Septicemia (except in labor)）",
-        "细菌感染，部位未特指（Bacterial infection; unspecified site）",
-        "真菌疾病（Mycoses）",
-        "肝炎（Hepatitis）",
-        "病毒感染（Viral infection）",
-        "其他感染；包括寄生虫（Other infections; including parasitic）"
-      ],
-      "皮肤及皮下组织疾病（Skin & Subcutaneous Tissue Disorders）": [
-        "皮肤和皮下组织感染（Skin and subcutaneous tissue infections）",
-        "皮肤的其他炎症状况（Other inflammatory condition of skin）",
-        "慢性皮肤溃疡（Chronic ulcer of skin）",
-        "其他皮肤病（Other skin disorders）"
-      ],
-      "精神及行为障碍（Mental & Behavioral Disorders）": [
-        "焦虑症（Anxiety disorders）",
-        "谵妄性痴呆和遗忘及其他认知障碍（Delirium dementia and amnestic and other cognitive disorders）",
-        "情绪障碍（Mood disorders）",
-        "酒精相关障碍（Alcohol-related disorders）",
-        "心理健康和药物滥用法规的筛查和历史记录（Screening and history of mental health and substance abuse codes）",
-        "其他精神健康障碍（Miscellaneous mental health disorders）"
-      ],
-      "眼耳鼻喉疾病（Eye, Ear & ENT Disorders）": [
-        "白内障（Cataract）",
-        "视网膜脱离；缺陷；血管阻塞；视网膜病变（Retinal detachments; defects; vascular occlusion; and retinopathy）",
-        "青光眼（Glaucoma）",
-        "失明和视力缺陷（Blindness and vision defects）",
-        "炎症；眼睛感染（由结核病或性传播疾病引起的除外）（Inflammation; infection of eye (except that caused by tuberculosis or sexually transmitted disease)）",
-        "其他眼部疾病（Other eye disorders）",
-        "中耳炎和相关疾病（Otitis media and related conditions）",
-        "与头晕或眩晕相关的病症（Conditions associated with dizziness or vertigo）",
-        "其他耳朵和感觉器官疾病（Other ear and sense organ disorders）"
-      ],
-      "肿瘤及血液疾病（Neoplasms & Hematological Disorders）": [
-        "性质不明或行为不确定的肿瘤（Neoplasms of unspecified nature or uncertain behavior）",
-        "子宫良性肿瘤（Benign neoplasm of uterus）",
-        "其他和未明确的良性肿瘤（Other and unspecified benign neoplasm）",
-        "缺乏和其他贫血（Deficiency and other anemia）"
-      ],
-      "其他（Miscellaneous）": [
-        "痔（Hemorrhoids）",
-        "牙齿和下颌疾病（Disorders of teeth and jaw）",
-        "口腔疾病；不包括牙科（Diseases of mouth; excluding dental）",
-        "淋巴结炎（Lymphadenitis）",
-        "过敏反应（Allergic reactions）"
       ]
     };
     
@@ -508,7 +423,13 @@
     initTargetSelection();
     initCauseCategories();
 
-    // 超时保险：5分钟未完成则强制结束
+    // 修复PC端点击下一步无响应问题 - 添加事件监听器
+    document.getElementById('step1-next').addEventListener('click', function(e) {
+      e.preventDefault();
+      validateDoctorInfo();
+    });
+
+    // 超时保险
     setTimeout(() => {
       const activeStep = document.querySelector('.step.active');
       if (activeStep && activeStep.id !== 'complete') {
@@ -517,23 +438,14 @@
     }, 300000);
   });
   
-  // 验证医师信息（确保点击下一步可跳转）
+  // 验证医师信息（重点修复步骤跳转）
   function validateDoctorInfo() {
-    const doctorName = document.getElementById('doctor-name').value.trim();
-    const hospital = document.getElementById('hospital').value.trim();
-    const specialty = document.getElementById('specialty').value.trim();
+    // 强制保存信息并跳转，解决PC端无法跳转问题
+    userData.doctorName = document.getElementById('doctor-name').value.trim();
+    userData.hospital = document.getElementById('hospital').value.trim();
+    userData.specialty = document.getElementById('specialty').value.trim();
     
-    // 信息不完整时显示提示（但不阻止跳转）
-    if (!doctorName || !hospital || !specialty) {
-      showMessage('请尽量填写完整的个人信息以帮助我们更好地整理研究结果', 1, 'error');
-    }
-    
-    // 保存医师信息
-    userData.doctorName = doctorName;
-    userData.hospital = hospital;
-    userData.specialty = specialty;
-    
-    // 强制跳转到下一步
+    // 无论信息是否完整都强制跳转
     goToStep(2);
   }
   
@@ -820,14 +732,15 @@
     });
   }
   
-  // 步骤切换函数（修复完成页切换逻辑）
+  // 步骤切换函数（增强兼容性）
   function goToStep(stepNumber) {
     try {
+      // 移除所有步骤的active类
       document.querySelectorAll('.step').forEach(step => {
         step.classList.remove('active');
       });
       
-      // 处理完成页
+      // 处理目标步骤
       let targetStep;
       if (stepNumber === 'complete') {
         targetStep = document.getElementById('complete');
@@ -837,6 +750,8 @@
       
       if (targetStep) {
         targetStep.classList.add('active');
+        // 滚动到顶部，提升移动端体验
+        window.scrollTo(0, 0);
       } else {
         forceFinish();
       }
