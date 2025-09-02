@@ -539,22 +539,23 @@
       });
     }
     
-    // 验证医师信息
+    // 验证医师信息（已修复：确保无论信息是否完整都能跳转）
     function validateDoctorInfo() {
       const doctorName = document.getElementById('doctor-name').value.trim();
       const hospital = document.getElementById('hospital').value.trim();
       const specialty = document.getElementById('specialty').value.trim();
-      
-      // 简单验证，不强制必填但提示
-      if (!doctorName || !hospital || !specialty) {
-        showMessage('请尽量填写完整的个人信息以帮助我们更好地整理研究结果', 1, 'error');
-      }
       
       // 保存医师信息
       userData.doctorName = doctorName;
       userData.hospital = hospital;
       userData.specialty = specialty;
       
+      // 信息不完整时显示提示（但不阻止跳转）
+      if (!doctorName || !hospital || !specialty) {
+        showMessage('请尽量填写完整的个人信息以帮助我们更好地整理研究结果', 1, 'error');
+      }
+      
+      // 强制跳转到步骤2（目标疾病选择）
       goToStep(2);
     }
     
@@ -756,7 +757,7 @@
       resultSummary.innerHTML = html;
     }
     
-    // 验证信心评分
+    // 验证信心评分（已修复：确保验证后能继续流程）
     function validateConfidenceAndProceed() {
       // 检查是否所有病因都已评分
       const unratedCauses = [];
@@ -782,7 +783,7 @@
         currentEntry.confidenceScores[disease.name] = parseInt(rating);
       });
       
-      // 继续流程
+      // 处理下一个目标疾病或完成问卷
       processNextTarget();
     }
     
@@ -881,13 +882,21 @@
       });
     }
     
-    // 步骤切换函数
+    // 步骤切换函数（已修复：支持complete页面切换）
     function goToStep(stepNumber) {
       try {
         document.querySelectorAll('.step').forEach(step => {
           step.classList.remove('active');
         });
-        const targetStep = document.getElementById('step' + stepNumber);
+        
+        // 单独处理完成页
+        let targetStep;
+        if (stepNumber === 'complete') {
+          targetStep = document.getElementById('complete');
+        } else {
+          targetStep = document.getElementById('step' + stepNumber);
+        }
+        
         if (targetStep) {
           targetStep.classList.add('active');
         } else {
@@ -924,12 +933,12 @@
       document.getElementById('progress-complete').classList.add('active');
     }
     
-    // 其他辅助函数
+    // 上一步按钮逻辑（已修复：正确返回步骤）
     function goToPreviousStep() {
       if (userData.currentTargetIndex === 0) {
-        goToStep(3);
+        goToStep(3); // 第一个目标疾病：返回步骤3（目标疾病确认）
       } else {
-        goToStep(5);
+        goToStep(4); // 非第一个目标疾病：返回步骤4（当前病因选择页）
       }
     }
     
@@ -945,4 +954,3 @@
   </script>
 </body>
 </html>
-    
