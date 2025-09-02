@@ -352,6 +352,8 @@
     document.addEventListener('DOMContentLoaded', function() {
       initTargetSelection();
       initCauseCategories();
+      // 初始化目标疾病列表显示
+      updateTargetDiseases();
     });
 
     // 步骤切换
@@ -440,10 +442,23 @@
           name: checkbox.value
         });
       });
+      
+      // 检查是否选择了大类但未选择具体疾病
+      const selectedCategories = [];
+      document.querySelectorAll('#target-categories input:checked').forEach(checkbox => {
+        selectedCategories.push(checkbox.value);
+      });
+      
+      if (selectedCategories.length > 0 && selectedDiseases.length === 0) {
+        showMessage('您已选择疾病大类，请从下方选择具体的目标疾病', 2, 'error');
+        return;
+      }
+      
       if (selectedDiseases.length === 0) {
         showMessage('请至少选择一个具体的目标疾病', 2, 'error');
         return;
       }
+      
       userData.targetDiseases = selectedDiseases;
       
       // 显示选择的目标疾病
@@ -525,6 +540,17 @@
           name: cb.value
         });
       });
+      
+      // 检查是否选择了大类但未选择具体疾病
+      const selectedCategories = [];
+      document.querySelectorAll('#current-cause-categories input:checked').forEach(checkbox => {
+        selectedCategories.push(checkbox.value);
+      });
+      
+      if (selectedCategories.length > 0 && selectedCauseDiseases.length === 0) {
+        showMessage('您已选择病因大类，请从下方选择具体的病因疾病', 4, 'error');
+        return;
+      }
       
       if (selectedCauseDiseases.length === 0) {
         showMessage('请至少选择一个具体的病因疾病', 4, 'error');
