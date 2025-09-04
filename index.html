@@ -366,7 +366,15 @@
 </div>
 
 
+<script src="https://cdn.jsdelivr.net/npm/leancloud-storage@4.13.0/dist/av-min.js"></script>
 <script>
+  // 初始化LeanCloud（替换为你的App ID、App Key和服务器地址）
+  AV.init({
+    appId: "gGqiiYWebLVD9H2FaNIM1RAW-gzGzoHsz",
+    appKey: "g4SMLGu3xacahGECMpmd7BGt",
+    serverURL: "https://ggqiiywe.lc-cn-n1-shared.com"
+  });
+
   let diseaseData;
   let userData = {
     expertId: generateAnonymousId(),
@@ -379,9 +387,6 @@
     allCauses: [],
     submitTime: '' // 记录提交时间
   };
-  
-  // 配置Google Apps Script地址（请替换为你自己的部署地址）
-  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx9S3XnUO3KlVAxpts-2ktlQ2wZRPx1uu_JBSMNMLZqgTa42v1FhGyq7FmBirN842Wo/exec";
   
   // 生成匿名ID（用于区分不同专家，保护隐私）
   function generateAnonymousId() {
@@ -815,8 +820,8 @@
         generateFinalSummary();
         // 记录提交时间
         userData.submitTime = new Date().toISOString();
-        // 提交数据到Google Sheets
-        submitDataToGoogleSheets();
+        // 提交数据到LeanCloud
+        saveToLeanCloud();
       } catch (e) {
         console.error('生成总结失败:', e);
       } finally {
@@ -862,63 +867,52 @@
     });
   }
   
-  // 核心功能：提交数据到Google Sheets
-  function submitDataToGoogleSheets() {
-    // 准备要提交的数据格式
-    const submitData = {
+  // 保存数据到LeanCloud
+  function saveToLeanCloud() {
+    // 准备要保存的数据（与之前格式一致）
+    const surveyData = {
       expertId: userData.expertId,
       doctorName: userData.doctorName,
       hospital: userData.hospital,
       specialty: userData.specialty,
       submitTime: userData.submitTime,
       targetDiseasesCount: userData.targetDiseases.length,
-      allCauses: userData.allCauses.map(item => {
-        return {
-          targetDisease: item.target.name,
-          targetCategory: item.target.category,
-          causeCount: item.diseases.length,
-          causes: item.diseases.map(d => ({
-            causeDisease: d.name,
-            causeCategory: d.category,
-            confidenceScore: item.confidenceScores[d.name]
-          }))
-        };
-      })
+      allCauses: userData.allCauses.map(item => ({
+        targetDisease: item.target.name,
+        targetCategory: item.target.category,
+        causes: item.diseases.map(d => ({
+          causeDisease: d.name,
+          causeCategory: d.category,
+          confidenceScore: item.confidenceScores[d.name]
+        }))
+      }))
     };
-    
-    // 发送数据到Google Apps Script
-    fetch(GOOGLE_SCRIPT_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(submitData)
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('网络响应不正常');
-      }
-      return response.text();
-    })
-    .then(data => {
-      console.log('数据提交成功:', data);
-      document.getElementById('submit-status').textContent = '您的问卷数据已成功保存！';
-      document.getElementById('submit-status').style.color = '#3c763d';
-    })
-    .catch(error => {
-      console.error('数据提交失败:', error);
-      document.getElementById('submit-status').textContent = '数据保存失败，请联系管理员！';
-      document.getElementById('submit-status').style.color = '#a94442';
-      
-      // 失败时提供手动备份选项
-      const backupData = JSON.stringify(submitData, null, 2);
-      const textarea = document.createElement('textarea');
-      textarea.style.width = '100%';
-      textarea.style.height = '150px';
-      textarea.style.marginTop = '10px';
-      textarea.value = '数据备份：\n' + backupData;
-      document.querySelector('.final-message').appendChild(textarea);
-    });
+
+    // 创建LeanCloud数据表（表名自定义，如SurveyResults）
+    const SurveyResult = AV.Object.extend('SurveyResults');
+    const result = new SurveyResult();
+
+    // 保存数据到表中
+    result.save(surveyData)
+      .then(savedResult => {
+        console.log('数据保存成功:', savedResult);
+        document.getElementById('submit-status').textContent = '问卷数据已成功保存！';
+        document.getElementById('submit-status').style.color = '#3c763d';
+      })
+      .catch(error => {
+        console.error('数据保存失败:', error);
+        document.getElementById('submit-status').textContent = '数据保存失败，请联系管理员！';
+        document.getElementById('submit-status').style.color = '#a94442';
+        
+        // 失败时提供手动备份选项
+        const backupData = JSON.stringify(surveyData, null, 2);
+        const textarea = document.createElement('textarea');
+        textarea.style.width = '100%';
+        textarea.style.height = '150px';
+        textarea.style.marginTop = '10px';
+        textarea.value = '数据备份：\n' + backupData;
+        document.querySelector('.final-message').appendChild(textarea);
+      });
   }
   
   // 步骤切换函数
@@ -995,7 +989,3 @@
 </script>
 </body>
 </html>
-
-
-
-
