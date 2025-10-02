@@ -239,7 +239,7 @@
       <div class="survey-flow">
         <p><strong>调查流程：</strong></p>
         <ol>
-          <li>填写您的基本信息（姓名、单位及擅长专科）。</li>
+          <li>填写您的基本信息。</li>
           <li>选择您擅长的疾病大类，并在其下选择您熟悉的所有目标疾病（即可能由其他疾病引起的疾病）。</li>
           <li>针对您选择的每个目标疾病，依次填写可能的病因疾病（填写时请先选择病因疾病所属的大类，再选择该大类中的具体疾病）。</li>
           <li>每次选择后将显示确认结果，全部填写完成后问卷将自动结束。</li>
@@ -275,11 +275,6 @@
     <div>
       <label class="form-label" for="hospital">所属单位：</label>
       <input type="text" id="hospital" placeholder="请输入您所在的医院/机构" tabindex="2" required>
-    </div>
-    
-    <div>
-      <label class="form-label" for="specialty">擅长专科：</label>
-      <input type="text" id="specialty" placeholder="请输入您擅长的专科领域" tabindex="3" required>
     </div>
   </div>
   
@@ -324,10 +319,10 @@
   <div class="question">
     <h3 id="current-target-title">请选择可能导致【目标疾病】的病因疾病</h3>
     
-    <h4>1. 选择可能的病因疾病大类（可多选）</h4>
+    <h4>1. 选择可能的病因疾病大类（可多选，可选空）</h4>
     <div id="current-cause-categories"></div>
     
-    <h4>2. 从选中的大类中选择具体病因疾病（可多选）</h4>
+    <h4>2. 从选中的大类中选择具体病因疾病（可多选，可选空）</h4>
     <div id="current-cause-diseases" style="margin-top:15px;"></div>
   </div>
   <button class="secondary" onclick="goToPreviousStep()">上一步</button>
@@ -551,14 +546,6 @@
       e.preventDefault();
       validateDoctorInfo();
     });
-
-    // 超时保险
-    setTimeout(() => {
-      const activeStep = document.querySelector('.step.active');
-      if (activeStep && activeStep.id !== 'complete') {
-        forceFinish();
-      }
-    }, 1200000); // 5分钟超时
   });
   
   // 验证医师信息
@@ -567,15 +554,15 @@
     const hospital = document.getElementById('hospital').value.trim();
     const specialty = document.getElementById('specialty').value.trim();
     
-    if (!name || !hospital || !specialty) {
-      showMessage('请填写完整的医师信息', 1, 'error');
+    if (!name || !hospital) {
+      showMessage('请填写姓名和所属单位', 1, 'error');
       return;
     }
     
     // 保存医师信息
     userData.doctorName = name;
     userData.hospital = hospital;
-    userData.specialty = specialty;
+    userData.specialty = specialty; // 可以为空
     
     goToStep(2);
   }
@@ -661,20 +648,30 @@
     });
   }
   
-  // 更新病因疾病列表
+  // 更新病因疾病列表（剔除目标疾病本身）
   function updateCurrentCauseDiseases() {
     const selectedCategories = [];
     document.querySelectorAll('#current-cause-categories input:checked').forEach(checkbox => {
       selectedCategories.push(checkbox.value);
     });
     const causeDiseasesDiv = document.getElementById('current-cause-diseases');
+    
+    // 获取当前目标疾病名称
+    const currentTarget = userData.targetDiseases[userData.currentTargetIndex];
+    const currentTargetName = currentTarget.name;
+    
     causeDiseasesDiv.innerHTML = selectedCategories.length === 0 
-      ? '<p>请先选择至少一个病因疾病大类</p>' 
+      ? '<p>请先选择至少一个病因疾病大类（可选）</p>' 
       : '';
     
     selectedCategories.forEach(category => {
       let html = `<div style="margin-bottom:15px;"><strong>${category}</strong>`;
       diseaseData[category].forEach(disease => {
+        // 跳过与目标疾病相同的疾病
+        if (disease === currentTargetName) {
+          return;
+        }
+        
         html += `
           <div class="disease-item">
             <input type="checkbox" id="current-cause-disease-${disease.replace(/\s+/g, '-')}" 
@@ -704,7 +701,7 @@
     
     // 重置选择框
     document.querySelectorAll('#current-cause-categories input').forEach(cb => cb.checked = false);
-    document.getElementById('current-cause-diseases').innerHTML = '<p>请先选择至少一个病因疾病大类</p>';
+    document.getElementById('current-cause-diseases').innerHTML = '<p>请先选择至少一个病因疾病大类（可选）</p>';
   }
   
   // 验证病因选择并进入信心评估
@@ -722,11 +719,7 @@
       });
     });
     
-    if (selectedCauseCategories.length === 0 || selectedCauseDiseases.length === 0) {
-      showMessage('请至少选择一个病因大类和对应的具体疾病', 4, 'error');
-      return;
-    }
-    
+    // 病因选择可以为空
     // 保存当前病因数据
     userData.allCauses.push({
       target: userData.targetDiseases[userData.currentTargetIndex],
@@ -747,33 +740,39 @@
     
     let html = `<p><strong>目标疾病：${currentTarget.name}</strong>（${currentTarget.category}）</p>`;
     
-    // 按大类分组生成列表
-    const categoryGroups = {};
-    currentEntry.diseases.forEach(d => {
-      if (!categoryGroups[d.category]) categoryGroups[d.category] = [];
-      categoryGroups[d.category].push(d.name);
-    });
-    
-    Object.keys(categoryGroups).forEach(cat => {
-      html += `<div class="category-group"><strong>${cat}：</strong><ul>`;
-      categoryGroups[cat].forEach(disease => {
-        const diseaseId = disease.replace(/\s+/g, '-');
-        html += `
-          <li>
-            ${disease}
-            <div class="confidence-rating">
-              <label>信心评分：</label>
-              <input type="radio" name="confidence-${diseaseId}" value="1" required>1
-              <input type="radio" name="confidence-${diseaseId}" value="2">2
-              <input type="radio" name="confidence-${diseaseId}" value="3">3
-              <input type="radio" name="confidence-${diseaseId}" value="4">4
-              <input type="radio" name="confidence-${diseaseId}" value="5">5
-            </div>
-          </li>
-        `;
+    if (currentEntry.diseases.length === 0) {
+      html += '<p>您未选择任何病因疾病。</p>';
+    } else {
+      html += '<p><strong>相关病因疾病及信心评分：</strong></p>';
+      
+      // 按大类分组生成列表
+      const categoryGroups = {};
+      currentEntry.diseases.forEach(d => {
+        if (!categoryGroups[d.category]) categoryGroups[d.category] = [];
+        categoryGroups[d.category].push(d.name);
       });
-      html += '</ul></div>';
-    });
+      
+      Object.keys(categoryGroups).forEach(cat => {
+        html += `<div class="category-group"><strong>${cat}：</strong><ul>`;
+        categoryGroups[cat].forEach(disease => {
+          const diseaseId = disease.replace(/\s+/g, '-');
+          html += `
+            <li>
+              ${disease}
+              <div class="confidence-rating">
+                <label>信心评分：</label>
+                <input type="radio" name="confidence-${diseaseId}" value="1" required>1
+                <input type="radio" name="confidence-${diseaseId}" value="2">2
+                <input type="radio" name="confidence-${diseaseId}" value="3">3
+                <input type="radio" name="confidence-${diseaseId}" value="4">4
+                <input type="radio" name="confidence-${diseaseId}" value="5">5
+              </div>
+            </li>
+          `;
+        });
+        html += '</ul></div>';
+      });
+    }
     
     resultSummary.innerHTML = html;
   }
@@ -781,28 +780,30 @@
   // 验证信心评分并进入下一步
   function validateConfidenceAndProceed() {
     // 检查是否所有病因都已评分
-    const unratedCauses = [];
     const currentEntry = userData.allCauses[userData.allCauses.length - 1];
     
-    currentEntry.diseases.forEach(disease => {
-      const diseaseId = disease.name.replace(/\s+/g, '-');
-      const isRated = document.querySelector(`input[name="confidence-${diseaseId}"]:checked`) !== null;
-      if (!isRated) {
-        unratedCauses.push(disease.name);
+    if (currentEntry.diseases.length > 0) {
+      const unratedCauses = [];
+      currentEntry.diseases.forEach(disease => {
+        const diseaseId = disease.name.replace(/\s+/g, '-');
+        const isRated = document.querySelector(`input[name="confidence-${diseaseId}"]:checked`) !== null;
+        if (!isRated) {
+          unratedCauses.push(disease.name);
+        }
+      });
+      
+      if (unratedCauses.length > 0) {
+        showMessage(`请为以下病因完成信心评估：${unratedCauses.join('、')}`, 5, 'error');
+        return;
       }
-    });
-    
-    if (unratedCauses.length > 0) {
-      showMessage(`请为以下病因完成信心评估：${unratedCauses.join('、')}`, 5, 'error');
-      return;
+      
+      // 保存每个病因的信心评分
+      currentEntry.diseases.forEach(disease => {
+        const diseaseId = disease.name.replace(/\s+/g, '-');
+        const rating = document.querySelector(`input[name="confidence-${diseaseId}"]:checked`).value;
+        currentEntry.confidenceScores[disease.name] = parseInt(rating);
+      });
     }
-    
-    // 保存每个病因的信心评分
-    currentEntry.diseases.forEach(disease => {
-      const diseaseId = disease.name.replace(/\s+/g, '-');
-      const rating = document.querySelector(`input[name="confidence-${diseaseId}"]:checked`).value;
-      currentEntry.confidenceScores[disease.name] = parseInt(rating);
-    });
     
     // 继续流程
     processNextTarget();
@@ -844,23 +845,28 @@
       let html = `
         <div style="margin-bottom:20px;">
           <p><strong>${index + 1}. 目标疾病：${item.target.name}</strong>（${item.target.category}）</p>
-          <p><strong>相关病因疾病及信心评分：</strong></p>
-        `;
+      `;
       
-      // 按大类分组
-      const categoryGroups = {};
-      item.diseases.forEach(d => {
-        if (!categoryGroups[d.category]) categoryGroups[d.category] = [];
-        categoryGroups[d.category].push(d.name);
-      });
-      
-      Object.keys(categoryGroups).forEach(cat => {
-        html += `<div class="category-group"><strong>${cat}：</strong><ul>`;
-        categoryGroups[cat].forEach(d => {
-          html += `<li>${d} - 信心评分：${item.confidenceScores[d]}/5</li>`;
+      if (item.diseases.length === 0) {
+        html += '<p>未选择任何病因疾病。</p>';
+      } else {
+        html += '<p><strong>相关病因疾病及信心评分：</strong></p>';
+        
+        // 按大类分组
+        const categoryGroups = {};
+        item.diseases.forEach(d => {
+          if (!categoryGroups[d.category]) categoryGroups[d.category] = [];
+          categoryGroups[d.category].push(d.name);
         });
-        html += '</ul></div>';
-      });
+        
+        Object.keys(categoryGroups).forEach(cat => {
+          html += `<div class="category-group"><strong>${cat}：</strong><ul>`;
+          categoryGroups[cat].forEach(d => {
+            html += `<li>${d} - 信心评分：${item.confidenceScores[d]}/5</li>`;
+          });
+          html += '</ul></div>';
+        });
+      }
       
       html += '</div>';
       finalSummary.innerHTML += html;
@@ -990,4 +996,3 @@
 </script>
 </body>
 </html>
-
