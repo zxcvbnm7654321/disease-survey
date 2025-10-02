@@ -239,7 +239,7 @@
       <div class="survey-flow">
         <p><strong>调查流程：</strong></p>
         <ol>
-          <li>填写您的基本信息（姓名、单位）。</li>
+          <li>填写您的基本信息。</li>
           <li>选择您擅长的疾病大类，并在其下选择您熟悉的所有目标疾病（即可能由其他疾病引起的疾病）。</li>
           <li>针对您选择的每个目标疾病，依次填写可能的病因疾病（填写时请先选择病因疾病所属的大类，再选择该大类中的具体疾病）。</li>
           <li>每次选择后将显示确认结果，全部填写完成后问卷将自动结束。</li>
@@ -698,7 +698,7 @@
     
     // 重置选择框
     document.querySelectorAll('#current-cause-categories input').forEach(cb => cb.checked = false);
-    document.getElementById('current-cause-diseases').innerHTML = '<p>请先选择至少一个病因疾病大类（可选）</p>';
+    document.getElementById('current-cause-diseases').innerHTML = '<p>请先选择一个病因疾病大类（可选）</p>';
   }
   
   // 验证病因选择并进入信心评估
@@ -732,7 +732,7 @@
     let html = `<p><strong>目标疾病：${currentTarget.name}</strong>（${currentTarget.category}）</p>`;
     
     if (currentEntry.diseases.length === 0) {
-      html += '<p>您未选择任何病因疾病。此目标疾病将以"无病因"记录。</p>';
+      html += '<p>您未选择任何病因疾病。</p>';
     } else {
       html += '<p><strong>相关病因疾病及信心评分：</strong></p>';
       
@@ -986,3 +986,4 @@
 </script>
 </body>
 </html>
+
