@@ -239,7 +239,7 @@
       <div class="survey-flow">
         <p><strong>调查流程：</strong></p>
         <ol>
-          <li>填写您的基本信息（姓名、单位及擅长专科）。</li>
+          <li>填写您的基本信息（姓名、单位）。</li>
           <li>选择您擅长的疾病大类，并在其下选择您熟悉的所有目标疾病（即可能由其他疾病引起的疾病）。</li>
           <li>针对您选择的每个目标疾病，依次填写可能的病因疾病（填写时请先选择病因疾病所属的大类，再选择该大类中的具体疾病）。</li>
           <li>每次选择后将显示确认结果，全部填写完成后问卷将自动结束。</li>
@@ -275,11 +275,6 @@
     <div>
       <label class="form-label" for="hospital">所属单位：</label>
       <input type="text" id="hospital" placeholder="请输入您所在的医院/机构" tabindex="2" required>
-    </div>
-    
-    <div>
-      <label class="form-label" for="specialty">擅长专科：</label>
-      <input type="text" id="specialty" placeholder="请输入您擅长的专科领域（选填）" tabindex="3">
     </div>
   </div>
   
@@ -381,7 +376,6 @@
     currentRound: 1,
     doctorName: '',
     hospital: '',
-    specialty: '',
     targetDiseases: [],
     currentTargetIndex: 0,
     allCauses: [],
@@ -557,7 +551,6 @@
   function validateDoctorInfo() {
     const name = document.getElementById('doctor-name').value.trim();
     const hospital = document.getElementById('hospital').value.trim();
-    const specialty = document.getElementById('specialty').value.trim();
     
     if (!name || !hospital) {
       showMessage('请填写姓名和所属单位', 1, 'error');
@@ -567,7 +560,6 @@
     // 保存医师信息
     userData.doctorName = name;
     userData.hospital = hospital;
-    userData.specialty = specialty; // 可以为空
     
     goToStep(2);
   }
@@ -711,11 +703,6 @@
   
   // 验证病因选择并进入信心评估
   function validateCauseSelection() {
-    const selectedCauseCategories = [];
-    document.querySelectorAll('#current-cause-categories input:checked').forEach(cb => {
-      selectedCauseCategories.push(cb.value);
-    });
-    
     const selectedCauseDiseases = [];
     document.querySelectorAll('#current-cause-diseases input:checked').forEach(cb => {
       selectedCauseDiseases.push({
@@ -724,8 +711,7 @@
       });
     });
     
-    // 病因选择可以为空
-    // 保存当前病因数据
+    // 无论是否选择了病因，都保存当前目标疾病
     userData.allCauses.push({
       target: userData.targetDiseases[userData.currentTargetIndex],
       diseases: selectedCauseDiseases,
@@ -746,7 +732,7 @@
     let html = `<p><strong>目标疾病：${currentTarget.name}</strong>（${currentTarget.category}）</p>`;
     
     if (currentEntry.diseases.length === 0) {
-      html += '<p>您未选择任何病因疾病。</p>';
+      html += '<p>您未选择任何病因疾病。此目标疾病将以"无病因"记录。</p>';
     } else {
       html += '<p><strong>相关病因疾病及信心评分：</strong></p>';
       
@@ -885,7 +871,6 @@
       expertId: userData.expertId,
       doctorName: userData.doctorName,
       hospital: userData.hospital,
-      specialty: userData.specialty,
       submitTime: userData.submitTime,
       targetDiseasesCount: userData.targetDiseases.length,
       allCauses: userData.allCauses.map(item => ({
@@ -1001,4 +986,3 @@
 </script>
 </body>
 </html>
-
